@@ -19,7 +19,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "AND (UPPER(item.name) LIKE UPPER(CONCAT('%', ?1, '%')) " +
             "OR UPPER(item.description) LIKE UPPER(CONCAT('%', ?1, '%')))";
 
-    Page<Item> findAllByOwner_IdIs(Long ownerId, Pageable pageable);
+    Page<Item> findAllByOwner_IdIsOrderById(Long ownerId, Pageable pageable);
 
     List<Item> findAllByRequestIn(List<ItemRequest> requests);
 
@@ -28,7 +28,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     List<Item> findAllByRequest_IdIs(Long requestId);
 
-    List<Item> findAllByOwner_IdIs(Long ownerId);
+    List<Item> findAllByOwner_IdIsOrderById(Long ownerId);
 
     @Query(searchQuery)
     List<Item> search(String text);

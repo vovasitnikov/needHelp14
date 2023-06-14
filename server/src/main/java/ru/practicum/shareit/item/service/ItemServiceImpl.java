@@ -86,7 +86,7 @@ public class ItemServiceImpl implements ItemService {
         var item = itemRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Item with id#" + id + " does not exist"));
         var comments = getAllComments(id);
-        var bookings = bookingService.getBookingsByItem(item.getId(), userId);
+        var bookings = bookingService.getBookingsByItem(id, userId);
         return mapToItemAllFieldsDto(item,
                 getLastItem(bookings),
                 getNextItem(bookings),
@@ -109,9 +109,9 @@ public class ItemServiceImpl implements ItemService {
                 .collect(groupingBy(CommentDto::getItemId));
         var pageRequest = makePageRequest(from, size, Sort.by("id").ascending());
         if (pageRequest == null)
-            stream = itemRepository.findAllByOwner_IdIs(userId).stream();
+            stream = itemRepository.findAllByOwner_IdIsOrderById(userId).stream();
         else
-            stream = itemRepository.findAllByOwner_IdIs(userId, pageRequest).stream();
+            stream = itemRepository.findAllByOwner_IdIsOrderById(userId, pageRequest).stream();
         return stream.map(item -> ItemMapper.mapToItemAllFieldsDto(item,
                         getLastItem(bookings.get(item.getId())),
                         getNextItem(bookings.get(item.getId())),

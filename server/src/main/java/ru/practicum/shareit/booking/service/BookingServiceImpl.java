@@ -56,8 +56,8 @@ public class BookingServiceImpl implements BookingService {
                 item.getId(),
                 APPROVED,
                 bookingSavingDto.getStart());
-        if (!bookings.isEmpty())
-            throw new NotFoundException("This item cannot be booked: " + item.getName());
+//        if (!bookings.isEmpty())
+//            throw new NotFoundException("This item cannot be booked: " + item.getName());
         var booking = mapToBooking(bookingSavingDto);
         booking.setStatus(WAITING);
         booking.setBooker(booker);
@@ -303,5 +303,8 @@ public class BookingServiceImpl implements BookingService {
         if (bookingSavingDto.getEnd().isBefore(bookingSavingDto.getStart())
                 || bookingSavingDto.getEnd().toLocalDate().isBefore(LocalDate.now()))
             throw new ValidationException("Incorrect end booking date");
+        if (bookingSavingDto.getStart().isEqual(bookingSavingDto.getEnd())) {
+            throw new ValidationException("Start Date cannot be equal to End Date");
+        }
     }
 }
